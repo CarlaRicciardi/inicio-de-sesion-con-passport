@@ -41,7 +41,7 @@ app.engine(
 //MONGOOSE CONNECTION
 async function connectMG() {
   try {
-    await mongoose.connect('mongodb+srv://carlaRicciardi:mongoatlas123@cluster0.uzjmdzn.mongodb.net/test', { useNewUrlParser: true });
+    await mongoose.connect('mongodb+srv://carlaRicciardi:mongoatlas123@cluster0.uzjmdzn.mongodb.net/desafio9', { useNewUrlParser: true });
     console.log('Conectado a mongo!');
   } catch (e) {
     console.log(e);
@@ -128,7 +128,7 @@ passport.deserializeUser((id, done) => {
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: 'mongodb+srv://carlaRicciardi:mongoatlas123@cluster0.uzjmdzn.mongodb.net/test',
+      mongoUrl: 'mongodb+srv://carlaRicciardi:mongoatlas123@cluster0.uzjmdzn.mongodb.net/desafio9',
       mongoOptions: {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -164,8 +164,10 @@ app.post('/signup', passport.authenticate('signup', { failureRedirect: '/failSig
 //1) conexion server
 io.on('connection', async (socket) => {
   console.log('usuario conectado');
+  // console.log('getall:', await products.getAll())
   socket.emit('msgs', await msgs.getAll());
-  socket.emit('products', await products.getAll());
+  const test = await products.getAll();
+  socket.emit('products', test);
   const aux = generateFakeProducts(5);
   socket.emit('prod-test', aux);
 

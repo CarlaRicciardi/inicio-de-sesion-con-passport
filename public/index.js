@@ -26,27 +26,14 @@ const render = (data) => {
     <td class='align-middle text-center'><img src='${obj.thumbnail}' width='50' height='auto' class='img-fluid' /></td>
     </tr>`;
   });
+  console.log('html:', html);
   document.getElementById('productos').innerHTML = html;
-};
-
-const renderProdTest = (data) => {
-  let html = '';
-  data.forEach((obj) => {
-    html += `<tr>
-    <td class='align-middle text-center'>${obj.title}</td>
-    <td class='align-middle text-center'>$${obj.price}</td>
-    <td class='align-middle text-center'><img src='${obj.thumbnail}' width='50' height='auto' class='img-fluid' /></td>
-    </tr>`;
-  });
-  document.getElementById('fakeProducts').innerHTML = html;
 };
 
 //4) atrapar desde el front el array de productos actualizado
 socket.on('products', (data) => {
+  console.log('data:', data);
   render(data);
-});
-socket.on('prod-test', (data) => {
-  renderProdTest(data);
 });
 
 //chat

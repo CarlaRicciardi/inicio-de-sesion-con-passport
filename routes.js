@@ -38,7 +38,7 @@ const postSignUp = (req, res) => {
   const body = req;
   console.log('body:', body);
   const user = { username, password };
-  res.render('successSignUp', { user });
+  res.render('successSignUp', { user: user });
 };
 
 const getFailSignUp = (req, res) => {
@@ -46,8 +46,15 @@ const getFailSignUp = (req, res) => {
 };
 
 const getLogout = (req, res) => {
-  req.logout();
-  res.render('/');
+  const { username, password } = req.user;
+  console.log(username);
+  req.session.destroy((err) => {
+    if (err) {
+      res.send('No se pudo deslogear');
+    } else {
+      res.render('logout', { user: username });
+    }
+  });
 };
 
 const failRoute = (req, res) => {

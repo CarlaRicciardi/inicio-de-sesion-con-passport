@@ -9,8 +9,8 @@ class contenedorMsgsMongoDB {
 
   async getAll() {
     try {
-      const allMsgs = await this.model.find({});
-      return allMsgs;
+      const result = await this.model.find({});
+      return result;
     } catch (err) {
       console.log(err, 'no se pueden mostrar todos los mensajes');
     }
