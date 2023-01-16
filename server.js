@@ -91,32 +91,31 @@ passport.use(
     (req, username, password, done) => {
       Users.findOne({ username: username }, function (err, user) {
         if (err) {
-          console.log('Error in SignUp: ' + err);
+          console.log('error in signup' + err);
           return done(err);
         }
         if (user) {
-          console.log('User already exists');
+          console.log('user already exists');
           return done(null, false);
         }
         const newUser = {
           username: username,
           password: createHash(password),
         };
-        Users.create(newUser),
-          (err, userWithId) => {
-            if (err) {
-              console.log('Error in Saving user: ' + err);
-              return done(err);
-            }
-            console.log(user);
-            console.log('User Registration succesful');
-            return done(null, userWithId);
-          };
+        Users.create(newUser, (err, userWithId) => {
+          if (err) {
+            console.log('error in saving user:' + err);
+            return done(err);
+          }
+          console.log(user);
+          console.log('user registration succesful');
+          return done(null, userWithId);
+        });
       });
     }
   )
 );
-//serializar y deserializar
+
 passport.serializeUser((user, done) => {
   done(null, user._id);
 });
@@ -145,19 +144,25 @@ app.use(
 app.use(passport.initialize()); //inicializamos passport dentro de express
 app.use(passport.session()); //meto la sesion de passport adentro de la app (serializ y deserializ)
 
-//ROUTES
+//-----------ROUTES
+//INDEX
 app.get('/', routes.getRoute);
+
+//LOGIN
 app.get('/login', routes.getLogin);
 app.get('/failLogin', routes.getFailLogin);
+app.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin' }), routes.postLogin);
+
+//SIGNUP
 app.get('/signup', routes.getSignUp);
 app.get('/failSignUp', routes.getFailSignUp);
-// app.get('/userExists',)
-app.get('/logout', routes.getLogout);
-app.get('*', routes.failRoute);
-
-//post login y signup se mete passport primero
-app.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin' }), routes.postLogin);
 app.post('/signup', passport.authenticate('signup', { failureRedirect: '/failSignUp' }), routes.postSignUp);
+
+//LOGOUT
+app.get('/logout', routes.getLogout);
+
+//FAILROUTE
+app.get('*', routes.failRoute);
 
 //BACK END
 //WEBSOCKET PARA TABLA DE PRODUCTOS

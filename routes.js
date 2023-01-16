@@ -12,13 +12,6 @@ const getLogin = (req, res) => {
   }
 };
 
-const postLogin = (req, res) => {
-  const { username, password } = req.user;
-  const user = { username, password };
-  console.log(user);
-  res.render('profileUser', { user });
-};
-
 const getFailLogin = (req, res) => {
   res.render('failLogin', {});
 };
@@ -33,20 +26,12 @@ const getSignUp = (req, res) => {
   }
 };
 
-const postSignUp = (req, res) => {
-  const { username, password } = req.user;
-  const body = req;
-  console.log('body:', body);
-  const user = { username, password };
-  res.render('successSignUp', { user: user });
-};
-
 const getFailSignUp = (req, res) => {
   res.render('failSignUp', {});
 };
 
 const getLogout = (req, res) => {
-  const { username, password } = req.user;
+  const { username } = req.user;
   console.log(username);
   req.session.destroy((err) => {
     if (err) {
@@ -61,4 +46,16 @@ const failRoute = (req, res) => {
   res.status(404).render('routing-error', {});
 };
 
-module.exports = { getRoute, getLogin, postLogin, getFailLogin, getSignUp, postSignUp, getFailSignUp, getLogout, failRoute };
+const postLogin = (req, res) => {
+  const { username, password } = req.user;
+  const user = { username, password };
+  res.render('profileUser', { user });
+};
+
+const postSignUp = (req, res) => {
+  const { username, password } = req.user;
+  const user = { username, password };
+  res.render('successSignUp', { user });
+};
+
+module.exports = { getRoute, getLogin, getFailLogin, getSignUp, getFailSignUp, getLogout, failRoute, postLogin, postSignUp };
